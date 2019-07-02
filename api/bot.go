@@ -39,6 +39,12 @@ func (s *Service) createBot(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if bot.Language == "" {
+		log.Error("missing language, setting to none")
+		bot.Language = "none"
+		return
+	}
+
 	err := s.storage.Bots.Create(&bot)
 	if err != nil {
 		log.Errorf("error creating bot on storage: %v", err)

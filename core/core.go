@@ -1,6 +1,7 @@
 package core
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/guilhermebr/botzito/engine/mongo"
@@ -9,18 +10,20 @@ import (
 
 type BotCore struct {
 	Name       string
+	Language   string
 	EngineType string
 	EngineData map[string]interface{}
 }
 
 type BotEngine interface {
-	Learn(map[string]interface{}) string
+	Learn([]byte) string
 	Ask(string) string
 }
 
 func LoadBot(botData *types.Bot) (*BotCore, error) {
 	return &BotCore{
 		Name:       botData.Name,
+		Language:   botData.Language,
 		EngineType: botData.EngineType,
 		EngineData: botData.EngineData,
 	}, nil
@@ -33,8 +36,8 @@ func (b *BotCore) Run(cmd types.BotCommand) (string, error) {
 	var engine BotEngine
 
 	//load engine
-	if b.EngineType == "default" {
-		engine, err = mongo.NewMongoEngine(b.Enginedata)
+	if b.EngineType == "mongo" {
+		engine, err = mongo.NewMongoEngine(b.Name, b.EngineData)
 		if err != nil {
 			return "", err
 		}
@@ -44,7 +47,11 @@ func (b *BotCore) Run(cmd types.BotCommand) (string, error) {
 	case types.LearnCommand:
 		fmt.Println("Learn")
 		fmt.Println(cmd.Data)
-		resp = engine.Learn(cmd.Data.(map[string]interafce{}))
+		b, err := json.Marshal(cmd.Data)
+		if err != nil {
+			return "", err
+		}
+		resp = engine.Learn(b)
 
 	default:
 		fmt.Println(cmd)

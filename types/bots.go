@@ -8,7 +8,9 @@ type commands string
 
 type Bot struct {
 	Name       string
-	EngineType string
+	Language   string
+	EngineType string                 `json:"engine_type"`
+	EngineData map[string]interface{} `json:"engine_data"`
 }
 
 type BotCommand struct {

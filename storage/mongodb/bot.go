@@ -2,11 +2,13 @@ package mongodb
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/guilhermebr/botzito/types"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/x/bsonx"
 )
 
 var _ types.BotStorage = &botStorage{}
@@ -21,7 +23,10 @@ type botStorage struct {
 }
 
 type bot struct {
-	Name string `bson:"name"`
+	Name       string `bson:"name"`
+	Language   string
+	EngineType string                 `bson:"engine_type" json:"engine_type"`
+	EngineData map[string]interface{} `bson:"engine_data" json:"engine_data"`
 }
 
 func NewBotStorage(db *DB) *botStorage {
@@ -33,14 +38,31 @@ func NewBotStorage(db *DB) *botStorage {
 }
 
 func (s *botStorage) collection() *mongo.Collection {
-	return s.db.Session.Database(s.db.Database).Collection(botCollectionName)
+	c := s.db.Session.Database(s.db.Database).Collection(botCollectionName)
+	_, err := c.Indexes().CreateOne(
+		context.Background(),
+		mongo.IndexModel{
+			Keys: bsonx.Doc{
+				{"name", bsonx.Int32(1)},
+			},
+			Options: options.Index().
+				SetUnique(true),
+		})
+
+	if err != nil {
+		fmt.Printf("error creating index - err: %v", err)
+	}
+	return c
 }
 
 func (s *botStorage) Create(form *types.Bot) error {
 	c := s.collection()
 
 	b := bot{
-		Name: form.Name,
+		Name:       form.Name,
+		Language:   form.Language,
+		EngineType: form.EngineType,
+		EngineData: form.EngineData,
 	}
 	_, err := c.InsertOne(s.ctx, b)
 	return err
@@ -58,7 +80,10 @@ func (s *botStorage) GetById(id string) (*types.Bot, error) {
 		return nil, err
 	}
 	form := types.Bot{
-		Name: b.Name,
+		Name:       b.Name,
+		Language:   b.Language,
+		EngineType: b.EngineType,
+		EngineData: b.EngineData,
 	}
 	return &form, err
 }
@@ -89,7 +114,10 @@ func (s *botStorage) listByFilter(filter bson.M, opts options.FindOptions) ([]*t
 			return nil, err
 		}
 		bots = append(bots, &types.Bot{
-			Name: b.Name,
+			Name:       b.Name,
+			Language:   b.Language,
+			EngineType: b.EngineType,
+			EngineData: b.EngineData,
 		})
 	}
 

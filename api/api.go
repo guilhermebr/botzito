@@ -1,7 +1,6 @@
 package api
 
 import (
-	"log"
 	"net/http"
 	"os"
 
@@ -9,7 +8,6 @@ import (
 	"github.com/guilhermebr/botzito/storage"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/negroni"
-	"gitlab.com/bsprojectdev/backend/common/middleware"
 )
 
 type Service struct {
@@ -26,9 +24,9 @@ type config struct {
 func (s *Service) LoadConfig() {
 	cfg := config{}
 	cfg.SecretKey = os.Getenv("SECRET_KEY")
-	if len(cfg.SecretKey) == 0 {
-		log.Fatal("SECRET_KEY env var is required")
-	}
+	//	if len(cfg.SecretKey) == 0 {
+	//		log.Fatal("SECRET_KEY env var is required")
+	//	}
 	cfg.Port = os.Getenv("PORT")
 	if cfg.Port == "" {
 		cfg.Port = "5000"
@@ -49,13 +47,13 @@ func Start(log *logrus.Logger, storage *storage.Storage) error {
 	//	r.HandleFunc("/login", service.login).Methods("POST")
 	r.HandleFunc("/bot", service.createBot).Methods("POST")
 	r.HandleFunc("/bot", service.listBot).Methods("GET")
-	r.HandleFunc("/bot/{id}/cmd", services.botCommand).Methods("POST")
+	r.HandleFunc("/bot/{id}", service.botCommand).Methods("POST")
 	//r.HandleFunc("/bot", middleware.ValidateTokenIfExists(service.Cfg.SecretKey, service.bot)).Methods("POST")
 
 	//Negroni
 	n := negroni.Classic()
-	//n.UseHandler(r)
-	n.UseHandler(middleware.Cors(r))
+	n.UseHandler(r)
+	//n.UseHandler(middleware.Cors(r))
 
 	service.log.Infoln("Listen at 0.0.0.0:" + service.Cfg.Port)
 	http.ListenAndServe(":"+service.Cfg.Port, n)
