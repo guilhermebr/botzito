@@ -37,7 +37,7 @@ func (b *BotCore) Run(cmd types.BotCommand) (string, error) {
 
 	//load engine
 	if b.EngineType == "mongo" {
-		engine, err = mongo.NewMongoEngine(b.Name, b.EngineData)
+		engine, err = mongo.NewMongoEngine(b.Name, b.Language, b.EngineData)
 		if err != nil {
 			return "", err
 		}
