@@ -33,18 +33,18 @@ $ curl -i 127.0.0.1:5000/bot -d '{
 ```
 $ curl -i 127.0.0.1:5000/bot/teste-bot -d '{
 	"command": "learn",
-  "data": {
-  	"tag": "hello",
-   	"patterns": [
-    	"Hy",
-      "Hello",
-      "Whats up?"
-    ],
-    "responses": [
-    	"Hy! how are you?",
-      "Hello :)"
-    ]
-  }
+	"data": {
+		"tag": "hello",
+		"patterns": [
+			"Hy",
+			"Hello",
+			"Whats up?"
+		],
+		"responses": [
+			"Hy! how are you?",
+			"Hello :)"
+		]
+	}
 }'
 ```
 
@@ -53,7 +53,7 @@ $ curl -i 127.0.0.1:5000/bot/teste-bot -d '{
 ```
 $ curl -i 127.0.0.1:5000/bot/teste-bot -d '{
 	"command": "ask",
-  "data": "Hello my friend!!"
+	"data": "Hello my friend!!"
 }'
 ```
 
