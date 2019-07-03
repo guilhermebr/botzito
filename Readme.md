@@ -2,16 +2,21 @@
 
 # Install from Source
 
+```
 $ git clone git@github.com/guilhermebr/botzito
 $ cd botzito
 $ make compile
+```
 
 # Running
 
+```
 $ ./cmd/botzito
+```
 
 # Creating a Bot
 
+```
 $ curl -i 127.0.0.1:5000/bot -d '{
 	"name": "teste-bot",
 	"language": "english",
@@ -21,9 +26,11 @@ $ curl -i 127.0.0.1:5000/bot -d '{
 		"database": "teste_bot"
 	}
 }'
+```
 
 # Creating a new Intent
 
+```
 $ curl -i 127.0.0.1:5000/bot/teste-bot -d '{
 	"command": "learn",
   "data": {
@@ -39,19 +46,22 @@ $ curl -i 127.0.0.1:5000/bot/teste-bot -d '{
     ]
   }
 }'
+```
 
 # Asking to bot
 
+```
 $ curl -i 127.0.0.1:5000/bot/teste-bot -d '{
 	"command": "ask",
   "data": "Hello my friend!!"
 }'
-
+```
 
 # Features
 
-[] Engine/Mongo: Entity recognizer
-[] Engine: Tensorflow
-[] Engine: Dialogflow
-[] Platforms: Slack
-[] Platforms: Telegram
+- [x] Engine: Mongo
+- [ ] Engine/Mongo: Entity recognizer
+- [ ] Engine: Tensorflow
+- [ ] Engine: Dialogflow
+- [ ] Platforms: Slack
+- [ ] Platforms: Telegram
