@@ -14,8 +14,6 @@ github.com/urfave/negroni
 github.com/xdg/scram
 # github.com/xdg/stringprep v1.0.0
 github.com/xdg/stringprep
-# gitlab.com/bsprojectdev/backend v0.0.0-20190621175547-9c12429ee192
-gitlab.com/bsprojectdev/backend/common
 # go.mongodb.org/mongo-driver v1.0.3
 go.mongodb.org/mongo-driver/bson
 go.mongodb.org/mongo-driver/mongo

@@ -3,6 +3,7 @@ package mongodb
 import (
 	"context"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -29,4 +30,15 @@ func New(endpoint, database string) (*DB, error) {
 	}
 
 	return &DB{Database: database, Session: client}, nil
+}
+
+// Atodoc converts any struct to bson Document
+func Atodoc(v interface{}) (doc *bson.D, err error) {
+	data, err := bson.Marshal(v)
+	if err != nil {
+		return
+	}
+
+	err = bson.Unmarshal(data, &doc)
+	return
 }

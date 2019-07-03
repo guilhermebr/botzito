@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"gitlab.com/bsprojectdev/backend/common"
+	"github.com/guilhermebr/botzito/storage/mongodb"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -52,7 +52,7 @@ func (s *mongoEngine) UpsertIntent(i Intent) error {
 	filter := bson.D{
 		{"tag", i.Tag},
 	}
-	doc, err := common.Atodoc(i)
+	doc, err := mongodb.Atodoc(i)
 	if err != nil {
 		return err
 	}
